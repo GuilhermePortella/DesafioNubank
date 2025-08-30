@@ -112,7 +112,7 @@ public final class JacksonJson {
   public static List<Operation> toDomain(List<OperationDTO> in) {
     return in.stream().map(d ->
       new Operation(
-        "buy".equalsIgnoreCase(d.operation()) ? OperationType.COMPRAR : OperationType.VENDER,
+        "buy".equalsIgnoreCase(d.operation()) ? OperationType.BUY : OperationType.SELL,
         BigDecimal.valueOf(d.unitCost()).setScale(2, RoundingMode.HALF_UP),
         d.quantity()
       )
