@@ -1,14 +1,9 @@
 C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\adapters\json\JacksonJson.java
 C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\adapters\cli\NubankDesafioJava.java
 C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\domain\OperationType.java
-C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\application\handlers\SellHandler.java
-C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\adapters\json\dto\OperationDTO.java
-C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\application\CapitalGainsCalculator.java
-C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\application\policy\TaxPolicy.java
-C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\domain\Operation.java
-C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\application\handlers\BuyHandler.java
-C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\application\handlers\OperationHandler.java
-C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\application\policy\DefaultTaxPolicy.java
 C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\adapters\json\dto\TaxDTO.java
 C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\domain\Portfolio.java
+C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\adapters\json\dto\OperationDTO.java
+C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\application\CapitalGainsCalculator.java
+C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\domain\Operation.java
 C:\Users\Guilherme\Desktop\fuga\Desafio_new\nubankDesafioJava\src\main\java\br\nubank\domain\TaxResult.java
