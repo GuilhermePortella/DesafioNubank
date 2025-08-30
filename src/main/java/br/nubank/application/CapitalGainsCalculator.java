@@ -19,7 +19,7 @@ public final class CapitalGainsCalculator {
         var out = new ArrayList<TaxResult>(ops.size());
 
         for (Operation op : ops) {
-            if (op.type() == OperationType.COMPRAR) {
+            if (op.type() == OperationType.BUY) {
                 applyBuy(portfolio, op);
                 out.add(zeroTax());
             } else {
