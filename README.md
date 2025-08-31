@@ -86,7 +86,7 @@ Este Projeto tem o objetivo de calcular o imposto de operações de compra e ven
      - 2 **Lucro** e **total da venda ≤ 20.000**: **isento**.
      - 3 **Lucro** e **total da venda > 20.000**: compensa com `accLoss` e aplica **20%** sobre o lucro.
 
-![nuFluxo.PNG](resources\imagens\nuFluxo.PNG)
+![nuFluxo.PNG](resources/imagens/nuFluxo.PNG)
 
 Esse fluxograma representa como as regras de negocios funcionam de maneira simplificada.
 
