@@ -79,10 +79,18 @@ public final class JacksonJson {
         return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(taxes);
     }
 
-    public static String writeWrapped(List<TaxDTO> taxes, int every) throws Exception {
-        if (every <= 0) {
-            return writeLine(taxes);
+    public static String writeJson(List<TaxDTO> taxes, boolean pretty, int wrapEvery) throws Exception {
+        if (wrapEvery > 0) {
+            // Mantém JSON válido e insere quebras visuais a cada N itens
+            return writeWrapped(taxes, wrapEvery);
         }
+        // Compacto (default) ou pretty, usando o ObjectMapper
+        return pretty
+                ? MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(taxes)
+                : MAPPER.writeValueAsString(taxes);
+    }
+
+    private static String writeWrapped(List<TaxDTO> taxes, int every) throws Exception {
         StringBuilder sb = new StringBuilder();
         sb.append('[');
         for (int i = 0; i < taxes.size(); i++) {
