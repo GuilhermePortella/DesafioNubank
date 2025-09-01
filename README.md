@@ -21,14 +21,17 @@ Este Projeto tem o objetivo de calcular o imposto de operações de compra e ven
    ```bash
       mvn clean install
    ```
+   Isso irá baixar as dependências e criar o binário para a execução do código!
+   
    Para uma visualização mais detalhada do que está acontecendo você pode colocar um -X no fim do comando, dessa forma:
    ```bash
       mvn clean install -X
    ```
 
+
 ## Como Execultar o Projeto: 
 
-   Apos a criação do JAR e que ja esteja tudo certo na pasta `target`, vamos seguir esses passos: 
+   Apos a criação do JAR na pasta `target`, vamos seguir esses passos: 
 
    Voce pode executar o script que disponibilizei aqui da seguinte forma:
       Navege ate a raiz do projeto em um terminal bash, e então execulte:  
@@ -36,18 +39,16 @@ Este Projeto tem o objetivo de calcular o imposto de operações de compra e ven
    ```bash  
       `run.sh`
    ```
-   Isso irá baixar as dependências e criar o binário para a execução do código!
-
    ### O conteudo do dcript é o seguinte:
-   
-   Isso ira facilitar os casos de testes do projeto, nesse script temos os seguintes comandos:
    
    ```bash
       #!/usr/bin/env bash
       java -jar ./target/nubankDesafioJava-1.0-SNAPSHOT.jar < ./resources/cases/inputCase1.txt
    ```
 
-   Para executar todos os cenários de teste você pode mudar apenas o número de exemplo no script por exemplo por padrão irei deixar 1 mas você pode alterá-lo assim:
+   Isso ira facilitar os casos de testes do projeto.
+
+   Para executar todos os cenários de teste você pode mudar apenas o número do inputCase no script por exemplo por padrão irei deixar 1 mas você pode alterá-lo assim:
 
    ```bash
       #!/usr/bin/env bash
@@ -57,7 +58,7 @@ Este Projeto tem o objetivo de calcular o imposto de operações de compra e ven
 ## Formato de Entrada/Saída
 
    ### Entrada (Simulação)
-   Lista de operações cada operação `operation`, `unit-cost`, `quantity`.
+   Lista de operações, cada operação `operation`, `unit-cost`, `quantity`.
 
    ```json
    [
@@ -68,13 +69,24 @@ Este Projeto tem o objetivo de calcular o imposto de operações de compra e ven
 
    #### São suportadas tambem entradas com multiplas listas.
 
-   Temos 9 cenários de teste incluindo, todos os casos de teste se encontram como arquivos .txt na estrutura do projeto.
+   ```json
+   [{"operation":"buy", "unit-cost":10.00, "quantity": 100},
+   {"operation":"sell", "unit-cost":15.00, "quantity": 100}]
+   [{"operation":"buy", "unit-cost":10.00, "quantity": 10000},
+   {"operation":"sell", "unit-cost":5.00, "quantity": 1000}]
+   ```
 
-   `src\resources`
+   Temos 9 cenários de teste, todos os casos de teste se encontram como arquivos .txt na estrutura do projeto.
+
+   `src\resources\cases\`
 
    ### Saída
    Mesma cardinalidade da simulação de entrada
    ```json
+   [{"tax":0},{"tax":0}]
+   ```
+   ```json
+   [{"tax":0},{"tax":0}]
    [{"tax":0},{"tax":0}]
    ```
    #### Por padrão a saída é compacta em 1 linha
@@ -101,12 +113,12 @@ Esse fluxograma representa como as regras de negocios funcionam de maneira simpl
    │  │  ├─ Main.java
    │  │  └─ CliApp.java
    │  └─ json/
-   │     ├─ JacksonJson.java  # leitura json
+   │     ├─ JacksonJson.java
    │     └─ dto/
    │        ├─ OperationDTO.java
    │        └─ TaxDTO.java
    ├─ br/nubank/application/
-   │  └─ CapitalGainsCalculator.java  # Logica
+   │  └─ CapitalGainsCalculator.java
    └─ br/nubank/domain/
       ├─ Operation.java
       ├─ OperationType.java
@@ -114,7 +126,7 @@ Esse fluxograma representa como as regras de negocios funcionam de maneira simpl
       └─ TaxResult.java
    ```
 
-   ### Essa forma de estrutura foi pensada para facilitar a manutenção, organização e escalabilidade do projeto, facilitando a abstração e desacoplamento das classes, tornando o projeto mais simples de se entender e de apresentar nossas funções ou classes no futuro.
+   ### Essa forma de estrutura foi pensada para facilitar a manutenção, organização e escalabilidade do projeto, facilitando a abstração e desacoplamento das classes, tornando o projeto mais simples de se entender e de apresentar nossas funções ou classes.
 
    ## Agradecimentos
    Agradeço pela oportunidade de participar do desafio. Foram dias de estudo e aprendizado, pude aplicar alguns dos meus conhecimentos do dia a dia e aprender coisas novas. A experiência de estudar as regras de negócio focando em uma solução simples mas que atendia todos os requisitos foi extremamente valiosa para mim. Estou ansioso pela resposta e de continuar a aprender e me desenvolver com o time de Nubankers que seria não só um objetivo de carreira mas como um sonho realizado. Espero poder contribuir com a missão de descomplicar a vida dos clientes com as melhores soluções e tecnologias do mercado.
