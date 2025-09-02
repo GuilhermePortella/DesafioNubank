@@ -81,10 +81,8 @@ public final class JacksonJson {
 
     public static String writeJson(List<TaxDTO> taxes, boolean pretty, int wrapEvery) throws Exception {
         if (wrapEvery > 0) {
-            // Mantém JSON válido e insere quebras visuais a cada N itens
             return writeWrapped(taxes, wrapEvery);
         }
-        // Compacto (default) ou pretty, usando o ObjectMapper
         return pretty
                 ? MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(taxes)
                 : MAPPER.writeValueAsString(taxes);
@@ -116,8 +114,7 @@ public final class JacksonJson {
                 out.add(new Operation(
                         parseOperationType(d.operation()),
                         BigDecimal.valueOf(d.unitCost()).setScale(2, RoundingMode.HALF_UP),
-                        d.quantity()
-                ));
+                        d.quantity()));
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException(e);
             }
