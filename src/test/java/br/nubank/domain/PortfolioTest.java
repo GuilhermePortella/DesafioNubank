@@ -16,7 +16,6 @@ public class PortfolioTest {
         p.addLoss(bd(1000.00));
         var rem = p.consumeLoss(bd(200.00));
         assertEquals(0, rem.compareTo(bd(0.00)));
-        // accLoss reduziu para 800
         assertEquals(0, p.getAccLoss().compareTo(bd(800.00)));
     }
 

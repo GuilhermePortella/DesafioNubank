@@ -34,9 +34,8 @@ public class CapitalGainsCalculatorTest {
     void mediaPonderada_eVendaTributavel_maiorQue20k() {
         var ops = List.of(
                 buy(10.00, 1000),
-                buy(20.00, 1000), // avg = 15.00
-                sell(25.00, 1000) // total=25,000; lucro=10,000; tax=2,000
-        );
+                buy(20.00, 1000),
+                sell(25.00, 1000));
         var out = new CapitalGainsCalculator().compute(ops);
         assertTax(out.get(0), 0.00);
         assertTax(out.get(1), 0.00);
@@ -47,9 +46,8 @@ public class CapitalGainsCalculatorTest {
     void vendaComPrejuizo_acumulaLoss_eZeraImposto() {
         var ops = List.of(
                 buy(10.00, 1000),
-                sell(5.00, 500), // loss 2,500
-                sell(30.00, 1000) // lucro 20,000 -> tributa (20,000-2,500)*20% = 3,500
-        );
+                sell(5.00, 500),
+                sell(30.00, 1000));
         var out = new CapitalGainsCalculator().compute(ops);
         assertTax(out.get(0), 0.00);
         assertTax(out.get(1), 0.00);
@@ -60,10 +58,9 @@ public class CapitalGainsCalculatorTest {
     void vendaIsenta_naoConsomePrejuizo() {
         var ops = List.of(
                 buy(10.00, 10000),
-                sell(5.00, 1000), // loss 5,000
-                sell(30.00, 666), // total=19,980 <= 20k (isento) e NÃO consome loss
-                sell(30.00, 1000) // agora tributa: (30-10)*1000 - 5,000 = 15,000 -> tax=3,000
-        );
+                sell(5.00, 1000),
+                sell(30.00, 666),
+                sell(30.00, 1000));
         var out = new CapitalGainsCalculator().compute(ops);
         assertTax(out.get(0), 0.00);
         assertTax(out.get(1), 0.00);
@@ -75,10 +72,9 @@ public class CapitalGainsCalculatorTest {
     void borda_totalExatamente_20000_isento() {
         var ops = List.of(
                 buy(10.00, 5000),
-                sell(5.00, 600), // loss 3,000
-                sell(20.00, 1000), // total=20,000 -> isento (não consome loss)
-                sell(30.00, 1000) // lucro 20,000 - 3,000 = 17,000 -> tax=3,400
-        );
+                sell(5.00, 600),
+                sell(20.00, 1000),
+                sell(30.00, 1000));
         var out = new CapitalGainsCalculator().compute(ops);
         assertTax(out.get(0), 0.00);
         assertTax(out.get(1), 0.00);
@@ -90,9 +86,8 @@ public class CapitalGainsCalculatorTest {
     void arredondamento_mediaEImposto_duasCasas_HALF_UP() {
         var ops = List.of(
                 buy(10.00, 1000),
-                buy(10.99, 1000), // avg -> 10.495 -> 10.50
-                sell(10.51, 2000) // lucro 0.01*2000=20 -> total=21,020 (>20k) -> tax=4.00
-        );
+                buy(10.99, 1000),
+                sell(10.51, 2000));
         var out = new CapitalGainsCalculator().compute(ops);
         assertTax(out.get(0), 0.00);
         assertTax(out.get(1), 0.00);
@@ -103,9 +98,8 @@ public class CapitalGainsCalculatorTest {
     void impostoNuncaNegativo_mesmoComLossSobrando() {
         var ops = List.of(
                 buy(10.00, 10000),
-                sell(2.00, 5000), // loss 40,000
-                sell(30.00, 1000) // lucro 20,000 -> compensado por loss -> tax=0
-        );
+                sell(2.00, 5000),
+                sell(30.00, 1000));
         var out = new CapitalGainsCalculator().compute(ops);
         assertTax(out.get(0), 0.00);
         assertTax(out.get(1), 0.00);

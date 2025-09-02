@@ -72,8 +72,8 @@ Este Projeto tem o objetivo de calcular o imposto de operações de compra e ven
    ```json
    [{"operation":"buy", "unit-cost":10.00, "quantity": 100},
    {"operation":"sell", "unit-cost":15.00, "quantity": 100}]
-   [{"operation":"buy", "unit-cost":10.00, "quantity": 10000},
-   {"operation":"sell", "unit-cost":5.00, "quantity": 1000}]
+   [{"operation":"buy", "unit-cost":10.00, "quantity": 100},
+   {"operation":"sell", "unit-cost":5.00, "quantity": 100}]
    ```
 
    Temos 9 cenários de teste, todos os casos de teste se encontram como arquivos .txt na estrutura do projeto.

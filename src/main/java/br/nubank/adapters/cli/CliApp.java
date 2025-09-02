@@ -11,7 +11,6 @@ final class CliApp {
         boolean pretty = false;
         int wrapEvery = 0;
 
-        // parse de flags bem simples
         for (String a : args) {
             if ("--pretty".equalsIgnoreCase(a)) {
                 pretty = true;
@@ -19,14 +18,12 @@ final class CliApp {
                 try {
                     wrapEvery = Integer.parseInt(a.substring("--wrap=".length()));
                 } catch (NumberFormatException ignored) {
-                    /* mantém zero */ }
+                }
             }
         }
 
         var calc = new CapitalGainsCalculator();
 
-        // suporta: (1) um único array JSON multi-linha; (2) vários arrays raiz
-        // sequenciais
         for (var inCase : JacksonJson.readAllCases(in)) {
             var domainOps = JacksonJson.toDomain(inCase);
             var results = calc.compute(domainOps);
