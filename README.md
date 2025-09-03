@@ -1,6 +1,7 @@
 # Code Challenge: Ganho de Capital
 
 ## Visão Geral
+
 Este Projeto tem o objetivo de calcular o imposto de operações de compra e venda de ações, imprimindo em CLI em formato JSON cada simulação lida apartir de um documento tipo .txt passado no terminal que esta ativo na aplicação 
 
  - **Entrada:**  uma ou mais simulação, cada simulação e uma lista em formato Json.
