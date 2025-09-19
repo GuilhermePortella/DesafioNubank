@@ -1,13 +1,15 @@
 # Code Challenge: Ganho de Capital
 
 ## Visão Geral
-Este projeto calcula o imposto sobre operações de compra e venda de ações e imprime a saída em **CLI** no formato **JSON**, uma **linha por simulação** lida da `stdin`.
+Este Projeto tem o objetivo de calcular o imposto de operações de compra e venda de ações, imprimindo em CLI em formato JSON cada simulação lida apartir de um documento tipo .txt passado no terminal que esta ativo na aplicação 
 
-- **Entrada:** uma ou mais simulações; cada simulação é **uma lista JSON** de operações.
-- **Saída:** para cada simulação, um **array JSON** com objetos `{ "tax": <valor> }`, um por operação.
-- **Dependências:**
-  - **JSON:** `jackson-databind 2.17.2`
-  - **Testes:** `junit-jupiter 5.10.2`
+ - **Entrada:**  uma ou mais simulação, cada simulação e uma lista em formato Json.
+ - - **Saída:** para cada simulação, um array JSON com `{"tax": <valor>}` por operação.
+ - **Dependencias:**
+   - **Json:** `jackson-databind v_2.17.2`
+   - **Testes:** 
+     - `junit-jupiter v_5.10.2`
+     - `junit v_4.13.2`
 
 ## Requisitos
 - **Java 21**
