@@ -1,63 +1,30 @@
 name: Maven CI
+
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
-jobs:
-  build-test-scan:
-    name: Build, Test, Mend Scan and Package
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
+    branches: [ main, master ]
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
-          cache: maven
-      - name: Run Mend SCA (Unified Agent)
-        env:
-          MEND_API_KEY: ${{ secrets.MEND_API_KEY }} 
-        run: |
-          if [ -z "${MEND_API_KEY}" ]; then
-            echo "::warning::MEND_API_KEY não configurado em Secrets. Pulando varredura do Mend."
-            exit 0
-          fi
-          echo "Baixando Mend Unified Agent..."
-          curl -sSL -o wss-unified-agent.jar https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
-          # Nomes de produto e projeto (ajuste se quiser)
-          PRODUCT_NAME="${{ github.repository_owner }}/DesafioNubank"
-          PROJECT_NAME="${{ github.event.repository.name }}-${{ github.ref_name }}"
-          echo "Executando varredura Mend para ${PRODUCT_NAME} / ${PROJECT_NAME}..."
-          java -jar wss-unified-agent.jar \
-            -apiKey "${MEND_API_KEY}" \
-            -d . \
-            -product "${PRODUCT_NAME}" \
-            -project "${PROJECT_NAME}" \
-            -failErrorLevel ALL
+          cache: 'maven'
 
-      - name: Build & Unit Tests
-        run: mvn -B -ntp -U clean verify
-      - name: Upload JAR artifacts
+      - name: Build & Test
+        run: mvn -B -q clean verify
+
+      - name: Upload JaCoCo report
         uses: actions/upload-artifact@v4
         with:
-          name: jars
-          path: |
-            **/target/*.jar
-            !**/original-*.jar
-
-      - name: Upload test reports (Surefire/Failsafe)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-reports
-          path: |
-            **/target/surefire-reports/**
-            **/target/failsafe-reports/**
+          name: jacoco-report
+          path: target/site/jacoco/

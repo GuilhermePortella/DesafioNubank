@@ -106,4 +106,67 @@ public class CapitalGainsCalculatorTest {
         assertTax(out.get(2), 0.00);
         out.forEach(r -> assertTrue(r.tax().compareTo(BigDecimal.ZERO) >= 0));
     }
+
+    @Test
+    void lucroZero_totalAcimaDe20k_isento() {
+        var ops = List.of(
+                buy(10.00, 3000),
+                sell(10.00, 3000));
+        var out = new CapitalGainsCalculator().compute(ops);
+        assertTax(out.get(0), 0.00);
+        assertTax(out.get(1), 0.00);
+    }
+
+    @Test
+    void consumoParcialDePerdas_primeiraTributavelZeraTax_segundaTributavelPaga() {
+        var ops = List.of(
+                buy(20.00, 1000),
+                sell(12.00, 1000),
+                sell(25.00, 1000),
+                sell(30.00, 1000));
+        var out = new CapitalGainsCalculator().compute(ops);
+        assertTax(out.get(0), 0.00);
+        assertTax(out.get(1), 0.00);
+        assertTax(out.get(2), 0.00);
+        assertTax(out.get(3), 1400.00);
+    }
+
+    @Test
+    void vendaTributavel_totalApenasAcimaDe20k() {
+        var ops = List.of(
+                buy(10.00, 1000),
+                sell(30.00, 667));
+        var out = new CapitalGainsCalculator().compute(ops);
+        assertTax(out.get(0), 0.00);
+        assertTax(out.get(1), 2668.00);
+    }
+
+    @Test
+    void resetDeMedia_aposZerarPosicao() {
+        var ops = List.of(
+                buy(10.00, 100),
+                sell(10.00, 100),
+                buy(30.00, 1000),
+                sell(50.00, 1000));
+        var out = new CapitalGainsCalculator().compute(ops);
+        assertTax(out.get(0), 0.00);
+        assertTax(out.get(1), 0.00);
+        assertTax(out.get(2), 0.00);
+        assertTax(out.get(3), 4000.00);
+    }
+
+    @Test
+    void consumoTotalDePerdas_emUmaUnicaTributavel() {
+        var ops = List.of(
+                buy(10.00, 1000),
+                sell(7.00, 1000),
+                buy(10.00, 2000),
+                sell(13.00, 2000));
+        var out = new CapitalGainsCalculator().compute(ops);
+        assertTax(out.get(0), 0.00);
+        assertTax(out.get(1), 0.00);
+        assertTax(out.get(2), 0.00);
+        assertTax(out.get(3), 600.00);
+    }
+
 }
