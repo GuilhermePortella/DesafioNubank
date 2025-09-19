@@ -45,13 +45,14 @@ public class CapitalGainsCalculatorTest {
     @Test
     void vendaComPrejuizo_acumulaLoss_eZeraImposto() {
         var ops = List.of(
-                buy(10.00, 1000),
-                sell(5.00, 500),
-                sell(30.00, 1000));
+                buy(10.00, 10000),
+                sell(5.00, 5000),
+                sell(12.00, 5000)
+        );
         var out = new CapitalGainsCalculator().compute(ops);
         assertTax(out.get(0), 0.00);
         assertTax(out.get(1), 0.00);
-        assertTax(out.get(2), 3500.00);
+        assertTax(out.get(2), 0.00);
     }
 
     @Test
@@ -120,15 +121,16 @@ public class CapitalGainsCalculatorTest {
     @Test
     void consumoParcialDePerdas_primeiraTributavelZeraTax_segundaTributavelPaga() {
         var ops = List.of(
-                buy(20.00, 1000),
-                sell(12.00, 1000),
-                sell(25.00, 1000),
-                sell(30.00, 1000));
+                buy(10.00, 10000),
+                sell(5.00, 5000), // Loss of 25000
+                sell(14.00, 2000), // Profit of 8000, consumed by loss -> tax 0. Remaining loss 17000
+                sell(20.00, 2000)  // Profit of 20000, taxable gain 3000 -> tax 600
+        );
         var out = new CapitalGainsCalculator().compute(ops);
         assertTax(out.get(0), 0.00);
         assertTax(out.get(1), 0.00);
         assertTax(out.get(2), 0.00);
-        assertTax(out.get(3), 1400.00);
+        assertTax(out.get(3), 600.00);
     }
 
     @Test

@@ -66,6 +66,12 @@ public final class CapitalGainsCalculator {
         BigDecimal unit = op.unitCost(); 
         long qty = op.quantity();
 
+        if (qty > s.qty()) {
+            throw new IllegalArgumentException( "Operação inválida: venda de " + qty +
+                    " ações, mas apenas " + s.qty() + " disponíveis."   );
+
+        }
+
         BigDecimal total = unit.multiply(BigDecimal.valueOf(qty));
         BigDecimal avg   = s.avgPrice();
 
