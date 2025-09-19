@@ -25,13 +25,17 @@ final class CliApp {
         var calc = new CapitalGainsCalculator();
 
         for (var inCase : JacksonJson.readAllCases(in)) {
-            var domainOps = JacksonJson.toDomain(inCase);
-            var results = calc.compute(domainOps);
-            var taxesDto = JacksonJson.toDto(results);
+            try {
+                var domainOps = JacksonJson.toDomain(inCase);
+                var results = calc.compute(domainOps);
+                var taxesDto = JacksonJson.toDto(results);
 
-            String json = JacksonJson.writeJson(taxesDto, pretty, wrapEvery);
+                String json = JacksonJson.writeJson(taxesDto, pretty, wrapEvery);
 
-            out.println(json);
+                out.println(json);
+            } catch (IllegalArgumentException e) {
+                System.err.println(e.getMessage());
+            }
         }
     }
 
