@@ -2,7 +2,6 @@ package br.nubank.application;
 
 import br.nubank.domain.Operation;
 import br.nubank.domain.OperationType;
-import br.nubank.domain.Portfolio;
 import br.nubank.domain.TaxResult;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -14,77 +13,96 @@ public final class CapitalGainsCalculator {
     private static final BigDecimal TWENTY_K = new BigDecimal("20000.00");
     private static final BigDecimal RATE = new BigDecimal("0.20");
 
+    private static record State(long qty, BigDecimal avgPrice, BigDecimal accLoss) {
+        State {
+            if (avgPrice == null) avgPrice = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+            if (accLoss == null)  accLoss  = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        }
+        static State empty() {
+            return new State(0L,
+                    BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+                    BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+        }
+    }
+
+    private static record SellResult(State next, TaxResult tax) {}
+
     public List<TaxResult> compute(List<Operation> ops) {
-        var portfolio = new Portfolio();
         var out = new ArrayList<TaxResult>(ops.size());
+        State s = State.empty();
 
         for (Operation op : ops) {
             if (op.type() == OperationType.BUY) {
-                applyBuy(portfolio, op);
+                s = applyBuy(s, op);
                 out.add(zeroTax());
             } else {
-                out.add(applySell(portfolio, op));
+                SellResult r = applySell(s, op);
+                s = r.next();
+                out.add(r.tax());
             }
         }
         return out;
     }
 
     private static TaxResult zeroTax() {
-        return new TaxResult(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+        return new TaxResult(BigDecimal.ZERO);
     }
 
-    private static void applyBuy(Portfolio p, Operation op) {
-
-        long oldQty = p.getQuantity();
+    private static State applyBuy(State s, Operation op) {
+        long oldQty = s.qty();
         long newQty = oldQty + op.quantity();
 
-        BigDecimal oldCost = p.getAvgPrice()
-                .multiply(BigDecimal.valueOf(oldQty))
-                .setScale(2, RoundingMode.HALF_UP);
-
-        BigDecimal newCost = op.unitCost()
-                .multiply(BigDecimal.valueOf(op.quantity()))
-                .setScale(2, RoundingMode.HALF_UP);
+        BigDecimal oldCost = s.avgPrice().multiply(BigDecimal.valueOf(oldQty));
+        BigDecimal newCost = op.unitCost().multiply(BigDecimal.valueOf(op.quantity()));
 
         BigDecimal newAvg = (oldQty == 0)
                 ? op.unitCost().setScale(2, RoundingMode.HALF_UP)
-                : oldCost.add(newCost).divide(BigDecimal.valueOf(newQty),
-                        2, RoundingMode.HALF_UP);
+                : oldCost.add(newCost).divide(BigDecimal.valueOf(newQty), 2, RoundingMode.HALF_UP);
 
-        p.setQuantity(newQty);
-        p.setAvgPrice(newAvg);
+        return new State(newQty, newAvg, s.accLoss());
     }
 
-    private static TaxResult applySell(Portfolio p, Operation op) {
-
-        BigDecimal unit = op.unitCost().setScale(2, RoundingMode.HALF_UP);
+    private static SellResult applySell(State s, Operation op) {
+        BigDecimal unit = op.unitCost(); 
         long qty = op.quantity();
 
-        BigDecimal total = unit.multiply(BigDecimal.valueOf(qty)).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal avg = p.getAvgPrice();
+        BigDecimal total = unit.multiply(BigDecimal.valueOf(qty));
+        BigDecimal avg   = s.avgPrice();
 
-        BigDecimal profit = unit.subtract(avg)
-                .multiply(BigDecimal.valueOf(qty))
-                .setScale(2, RoundingMode.HALF_UP);
+        BigDecimal profit = unit.subtract(avg).multiply(BigDecimal.valueOf(qty));
 
         if (profit.signum() < 0) {
-            p.addLoss(profit.abs());
-            p.decreseQuantity(qty);
-            return zeroTax();
+            BigDecimal newAccLoss = s.accLoss().add(profit.abs()).setScale(2, RoundingMode.HALF_UP);
+            State next = new State(s.qty() - qty, s.avgPrice(), newAccLoss);
+            return new SellResult(next, zeroTax());
         }
 
         if (total.compareTo(TWENTY_K) <= 0) {
-            p.decreseQuantity(qty);
-            return zeroTax();
+            State next = new State(s.qty() - qty, s.avgPrice(), s.accLoss());
+            return new SellResult(next, zeroTax());
         }
 
-        BigDecimal taxable = p.consumeLoss(profit);
-        BigDecimal tax = (taxable.signum() > 0)
-                ? taxable.multiply(RATE).setScale(2, RoundingMode.HALF_UP)
-                : BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        var consumed = consumeLoss(s.accLoss(), profit);
+        BigDecimal taxable = consumed.remainingProfit();
+        State afterConsume = new State(s.qty() - qty, s.avgPrice(), consumed.newAccLoss());
 
-        p.decreseQuantity(qty);
-        return new TaxResult(tax);
+        BigDecimal tax = (taxable.signum() > 0) ? taxable.multiply(RATE) : BigDecimal.ZERO;
+        return new SellResult(afterConsume, new TaxResult(tax));
     }
 
+    private static record LossConsumption(BigDecimal newAccLoss, BigDecimal remainingProfit) {}
+
+    private static LossConsumption consumeLoss(BigDecimal accLoss, BigDecimal profit) {
+        if (profit.signum() <= 0) {
+            return new LossConsumption(accLoss, profit);
+        }
+        int cmp = profit.compareTo(accLoss);
+        if (cmp <= 0) {
+            BigDecimal newAcc = accLoss.subtract(profit).setScale(2, RoundingMode.HALF_UP);
+            return new LossConsumption(newAcc, BigDecimal.ZERO);
+        } else {
+            BigDecimal remaining = profit.subtract(accLoss);
+            return new LossConsumption(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), remaining);
+        }
+    }
 }

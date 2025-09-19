@@ -28,4 +28,21 @@ public class JacksonJsonTest {
         assertEquals(50, ops.get(1).quantity());
 
     }
+
+    @Test
+    void toDomain_operationInvalida_lancaExcecaoComMensagemClara() {
+        var dtos = java.util.List.of(new br.nubank.adapters.json.dto.OperationDTO("hold", 10.0, 1));
+
+        var ex = assertThrows(IllegalArgumentException.class,
+                () -> br.nubank.adapters.json.JacksonJson.toDomain(dtos));
+
+        String msg = ex.getMessage();
+        if (msg == null && ex.getCause() != null) {
+            msg = ex.getCause().getMessage();
+        }
+
+        assertNotNull(msg, "Mensagem de erro não deve ser nula");
+        assertTrue(msg.toLowerCase().contains("inválid"), // cobre "inválido"/"invalido"
+                "Mensagem deve indicar operação inválida: " + msg);
+    }
 }

@@ -1,20 +1,17 @@
 # Code Challenge: Ganho de Capital
 
 ## Visão Geral
-Este Projeto tem o objetivo de calcular o imposto de operações de compra e venda de ações, imprimindo em CLI em formato JSON cada simulação lida apartir de um documento tipo .txt passado no terminal que esta ativo na aplicação 
+Este projeto calcula o imposto sobre operações de compra e venda de ações e imprime a saída em **CLI** no formato **JSON**, uma **linha por simulação** lida da `stdin`.
 
- - **Entrada:**  uma ou mais simulação, cada simulação e uma lista em formato Json.
- - - **Saída:** para cada simulação, um array JSON com `{"tax": <valor>}` por operação.
- - **Dependencias:**
-   - **Json:** `jackson-databind v_2.17.2`
-   - **Testes:** 
-     - `junit-jupiter v_5.10.2`
-     - `junit v_4.13.2`
+- **Entrada:** uma ou mais simulações; cada simulação é **uma lista JSON** de operações.
+- **Saída:** para cada simulação, um **array JSON** com objetos `{ "tax": <valor> }`, um por operação.
+- **Dependências:**
+  - **JSON:** `jackson-databind 2.17.2`
+  - **Testes:** `junit-jupiter 5.10.2`
 
 ## Requisitos
- - **Java** 21 ou apartir do 17 
-      - Se preferir usar uma versao antiga do java ajuste no pom pra versao de sua preferencia.
- - **Maven**  3.9.4 ou apartir do 3.8+.
+- **Java 21**
+- **Maven 3.9+**
   
    **Build:**
    Em um terminal navegue até a raiz do projeto e digite o comando:
@@ -43,7 +40,7 @@ Este Projeto tem o objetivo de calcular o imposto de operações de compra e ven
    
    ```bash
       #!/usr/bin/env bash
-      java -jar ./target/nubankDesafioJava-1.0-SNAPSHOT.jar < ./resources/cases/inputCase1.txt
+      java -jar ./target/nubankDesafioJava-1.0-SNAPSHOT-shaded.jar < ./resources/cases/inputCase1.txt
    ```
 
    Isso ira facilitar os casos de testes do projeto.
@@ -52,7 +49,7 @@ Este Projeto tem o objetivo de calcular o imposto de operações de compra e ven
 
    ```bash
       #!/usr/bin/env bash
-      java -jar ./target/nubankDesafioJava-1.0-SNAPSHOT.jar < ./resources/cases/inputCase2.txt
+      java -jar ./target/nubankDesafioJava-1.0-SNAPSHOT-shaded.jar < ./resources/cases/inputCase2.txt
    ```
 
 ## Formato de Entrada/Saída
@@ -110,15 +107,15 @@ Esse fluxograma representa como as regras de negocios funcionam de maneira simpl
    src/main/java/
    ├─ br/nubank/adapters/
    │  ├─ cli/
-   │  │  ├─ Main.java
-   │  │  └─ CliApp.java
+   │  │  ├─ NubankDesafioJava.java   (main)
+   │  │  └─ CliApp.java              (aplicação CLI)
    │  └─ json/
    │     ├─ JacksonJson.java
    │     └─ dto/
    │        ├─ OperationDTO.java
    │        └─ TaxDTO.java
    ├─ br/nubank/application/
-   │  └─ CapitalGainsCalculator.java
+   │  └─ CapitalGainsCalculator.java (cálculo)
    └─ br/nubank/domain/
       ├─ Operation.java
       ├─ OperationType.java

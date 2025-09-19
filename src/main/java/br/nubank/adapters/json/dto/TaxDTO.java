@@ -1,3 +1,5 @@
 package br.nubank.adapters.json.dto;
 
-public record TaxDTO(double tax) {}
+import java.math.BigDecimal;
+
+public record TaxDTO(BigDecimal tax) {}

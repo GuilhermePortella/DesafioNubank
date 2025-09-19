@@ -67,7 +67,8 @@ public final class JacksonJson {
                 return OperationType.SELL;
             default:
                 throw new IllegalArgumentException(
-                        "Campo 'operation' inválido: '" + raw + "'. Aceitos: buy/sell.");
+                        "Campo 'operation' inválido: '" + raw
+                                + "'. Aceitos: buy/sell ou comprar/vender (case-insensitive).");
         }
     }
 
@@ -124,7 +125,7 @@ public final class JacksonJson {
 
     public static List<TaxDTO> toDto(List<TaxResult> results) {
         return results.stream()
-                .map(r -> new TaxDTO(r.tax().doubleValue()))
+                .map(r -> new TaxDTO(r.tax()))
                 .toList();
     }
 
